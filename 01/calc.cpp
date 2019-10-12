@@ -73,10 +73,10 @@ void S(char *input, int &idx, stack<int> &my_stack) {
 }
 int main(int argc, char **argv) {
     int idx = 0;
-    stack<int> my_stack;
     while (isspace((unsigned char)argv[1][idx])) {
         ++idx;
     }
+    stack<int> my_stack;
     try {
         S(argv[1], idx, my_stack);
     } catch (const char *exc) {
