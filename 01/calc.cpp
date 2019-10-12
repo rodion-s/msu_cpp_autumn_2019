@@ -12,7 +12,7 @@ void gc(char *input, int &idx) {
     while (isspace((unsigned char)input[idx++]));
 }
 void NUMBER(char *input, int &idx, stack<int> &my_stack) {
-    static int current_num = 0;
+    int current_num = 0;
     bool modified = false;
     while (isdigit((unsigned char)input[idx])) {
         modified = true;

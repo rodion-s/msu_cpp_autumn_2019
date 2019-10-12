@@ -5,3 +5,5 @@ run: calc
 	./calc "42"
 test: calc
 	python3 check.py
+clean:
+	rm -f calc
