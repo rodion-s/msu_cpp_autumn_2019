@@ -80,9 +80,9 @@ int main(int argc, char **argv) {
     try {
         S(argv[1], idx, my_stack);
     } catch (const char *exc) {
-        cout << exc;
+        cout << exc << endl;
         return 1;
     }
-    cout << my_stack.top();
+    cout << my_stack.top() << endl;
     return 0;
 }
