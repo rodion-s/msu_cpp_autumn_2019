@@ -12,17 +12,14 @@ void gc(char *input, int &idx) {
     while (isspace((unsigned char)input[idx++]));
 }
 void NUMBER(char *input, int &idx, stack<int> &my_stack) {
-    int current_num = 0;
-    bool modified = false;
-    while (isdigit((unsigned char)input[idx])) {
-        modified = true;
-        current_num = current_num * 10 + (input[idx++] - '0');
-    }
-    if (!modified) {
+    if (!isdigit((unsigned char)input[idx])) {
         throw "invalid_argument";
     }
+    int current_num = 0;
+    while (isdigit((unsigned char)input[idx])) {
+        current_num = current_num * 10 + (input[idx++] - '0');
+    }
     my_stack.push(current_num);
-    current_num = 0;
     while (isspace((unsigned char)input[idx])) {
         ++idx;
     }
