@@ -52,7 +52,6 @@ void T(char *input, int &idx, stack<int> &my_stack) {
         }
     }
 }
-
 void S(char *input, int &idx, stack<int> &my_stack) {
     T(input, idx, my_stack);
     while (input[idx] == '+' || input[idx] == '-') {
