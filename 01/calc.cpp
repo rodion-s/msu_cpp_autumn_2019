@@ -15,7 +15,7 @@ void GET_LEX(const char *input, int &idx) {
 }
 void NUMBER(const char *input, int &idx, stack<int> &my_stack) {
     if (!isdigit((unsigned char)input[idx])) {
-        throw invalid_argument(string("error on lexeme: ") + input[idx]);
+        throw invalid_argument(string("Error on lexeme: ") + input[idx]);
     }
     int current_num = 0;
     while (isdigit((unsigned char)input[idx])) {
@@ -50,6 +50,9 @@ void TERM(const char *input, int &idx, stack<int> &my_stack) {
         if (temp == '*') {
             my_stack.push(op1 * op2);
         } else if (temp == '/') {
+            if (op2 == 0) {
+                throw logic_error("Error: division by zero");
+            }
             my_stack.push(op1 / op2);
         }
     }
@@ -70,7 +73,7 @@ void EXPR(const char *input, int &idx, stack<int> &my_stack) {
         }
     }
     if (input[idx]) {
-        throw invalid_argument(string("error on lexeme: ") + input[idx]);
+        throw invalid_argument(string("Error on lexeme: ") + input[idx]);
     }
 }
 int main(int argc, char **argv) {
@@ -82,6 +85,9 @@ int main(int argc, char **argv) {
     try {
         EXPR(argv[1], idx, my_stack);
     } catch (invalid_argument &exc) {
+        cout << exc.what() << endl;
+        return 1;
+    } catch (logic_error &exc) {
         cout << exc.what() << endl;
         return 1;
     }
