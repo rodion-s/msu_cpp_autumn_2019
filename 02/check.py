@@ -7,14 +7,14 @@ def check(args, result):
     else:
         print('OK')
 
-check('2 alloc:2\n', 'Init 2 bytes\n'
+check('2 alloc:2', 'Init 2 bytes\n'
                      'Allocated 2 bytes\n')
-check('2 alloc:4\n', 'Init 2 bytes\n'
+check('2 alloc:4', 'Init 2 bytes\n'
                      'null\n')
-check('2 alloc:0\n', 'Init 2 bytes\n'
+check('2 alloc:0', 'Init 2 bytes\n'
                      'Allocated 0 bytes\n')
 check('16 alloc:12 alloc:1 alloc:2 alloc:10', 'Init 16 bytes\n'
-						                      'Allocated 12 bytes\n'
+                                              'Allocated 12 bytes\n'
                                               'Allocated 1 bytes\n'
                                               'Allocated 2 bytes\n'
                                               'null\n')
@@ -23,9 +23,11 @@ check('4 alloc:4 reset alloc:2', 'Init 4 bytes\n'
                                 'Reseted\n'
                                 'Allocated 2 bytes\n')
 
+
 check('0', 'Init 0 bytes\n')
-check('0 alloc:5\n', 'Init 0 bytes\n'
+check('0 alloc:5', 'Init 0 bytes\n'
                     'null\n')
+
 
 check('100 alloc:95 reset alloc:96 reset alloc:1 alloc:99', 'Init 100 bytes\n'
                                                             'Allocated 95 bytes\n'
