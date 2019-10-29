@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     const Matrix cm(rows, cols);
     const Matrix cm1(rows, cols);
     const Matrix cm2(rows, cols);
+    Matrix testm(0, 0);
     switch (stoi(argv[1])) {
 
         case 1:
@@ -73,8 +74,25 @@ int main(int argc, char *argv[])
             }
                 break;
         case 12:
+            assert(cm[0][2] == 0);
+            break;
+        case 13:
             try {
                 m[5][3];
+            } catch (out_of_range &exc) {
+                cout << "out of range" << endl;
+            }
+            break;
+        case 14:
+            try {
+                m[4][3];
+            } catch (out_of_range &exc) {
+                cout << "out of range" << endl;
+            }
+            break;
+        case 15:
+            try {
+                testm[0][0];
             } catch (out_of_range &exc) {
                 cout << "out of range" << endl;
             }

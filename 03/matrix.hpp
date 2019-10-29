@@ -1,7 +1,7 @@
 
 class Matrix
 {
-    const int rows, cols;
+    size_t rows, cols;
     int **storage;
     Matrix(const Matrix &other) = delete;
     Matrix& operator= (const Matrix &other) = delete;
@@ -9,11 +9,11 @@ public:
     class Proxy
     {
         int **storage;
-        const int row_idx;
-        const int cols;
+        size_t row_idx;
+        size_t cols;
     public:
-        Proxy(int **addr, int row_idx, int cols) : storage(addr), row_idx(row_idx), cols(cols) {}
-        int& operator[] (int col_idx) {
+        Proxy(int **addr, size_t row_idx, size_t cols) : storage(addr), row_idx(row_idx), cols(cols) {}
+        int& operator[] (size_t col_idx) {
             if (col_idx >= cols) {
                 throw std::out_of_range("");
             }
@@ -21,14 +21,14 @@ public:
         } 
     };
     
-    Matrix(int rows, int cols) : rows(rows), cols(cols) {
+    Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
         storage = new int*[rows];
-        for (int i = 0; i < rows; ++i) {
+        for (size_t i = 0; i < rows; ++i) {
             storage[i] = new int[cols]();
         }
     }
     ~Matrix() {
-        for (int i = 0; i < rows; ++i) {
+        for (size_t i = 0; i < rows; ++i) {
             delete[] storage[i];
         }
         delete[] storage;
@@ -39,7 +39,7 @@ public:
     int getColumns() const {
         return cols;
     }
-    Proxy operator[] (int row_idx) {
+    Proxy operator[] (size_t row_idx) const {
         if (row_idx >= rows) {
             throw std::out_of_range("");
         }
@@ -50,8 +50,8 @@ public:
         if (rows != other.rows || cols != other.cols) {
             return false;
         }
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < cols; ++j) {
                 if (storage[i][j] != other.storage[i][j]) {
                     return false;
                 }
@@ -64,8 +64,8 @@ public:
     }
 
     Matrix& operator*= (int value) {
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < cols; ++j) {
                 storage[i][j] *= value;
             }
         }
