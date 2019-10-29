@@ -1,4 +1,3 @@
-
 class Matrix
 {
     size_t rows, cols;
@@ -33,10 +32,10 @@ public:
         }
         delete[] storage;
     }
-    int getRows() const {
+    size_t getRows() const {
         return rows;
     }
-    int getColumns() const {
+    size_t getColumns() const {
         return cols;
     }
     Proxy operator[] (size_t row_idx) const {
