@@ -18,6 +18,12 @@ public:
             }
             return storage[row_idx][col_idx];
         } 
+        const int& operator[] (size_t col_idx) const {
+            if (col_idx >= cols) {
+                throw std::out_of_range("");
+            }
+            return storage[row_idx][col_idx];
+        } 
     };
     
     Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
@@ -38,7 +44,13 @@ public:
     size_t getColumns() const {
         return cols;
     }
-    Proxy operator[] (size_t row_idx) const {
+    Proxy operator[] (size_t row_idx) {
+        if (row_idx >= rows) {
+            throw std::out_of_range("");
+        }
+        return Proxy(storage, row_idx, cols);
+    }
+    const Proxy operator[] (size_t row_idx) const {
         if (row_idx >= rows) {
             throw std::out_of_range("");
         }

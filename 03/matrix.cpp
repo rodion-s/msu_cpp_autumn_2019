@@ -3,6 +3,14 @@
 #include <cassert>
 #include "matrix.hpp"
 
+template <typename T> bool isConst(T& x) {
+   return false;
+}
+
+template <typename T> bool isConst(T const& x) {
+   return true;
+}
+
 using namespace std;
 int main(int argc, char *argv[])
 {
@@ -75,6 +83,7 @@ int main(int argc, char *argv[])
                 break;
         case 12:
             assert(cm[0][2] == 0);
+            assert(isConst(cm[0][2]) == true);
             break;
         case 13:
             try {
