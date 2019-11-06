@@ -1,22 +1,20 @@
 #include <iostream>
 #include <cstring>
-using namespace std;
 
 constexpr int base = 10;
-constexpr int default_size = 100;
+constexpr int default_size = 10;
 class BigInt
 {
 	char *storage;
-	ssize_t available_size;
-	ssize_t current_size;
+	size_t available_size;
+	size_t current_size;
 	bool sign;
 public:
-	void resize(ssize_t sz) {
+	void resize(size_t sz) {
 		char *new_storage = new char[sz]();
-		for (ssize_t i = 0; i < current_size; ++i) {
+		for (size_t i = 0; i < current_size; ++i) {
 			new_storage[i] = storage[i];
 		}
-		++current_size;
 		delete[] storage;
 		storage = new_storage;
 	}
@@ -39,23 +37,23 @@ public:
 	BigInt(const BigInt &other) : available_size(other.available_size),
 		current_size(other.current_size), sign(other.sign)
 	{
-		storage = new char[other.current_size]();
+		storage = new char[other.available_size]();
 		memcpy(storage, other.storage, other.current_size);
 	}
-	BigInt(BigInt &&other) : available_size(move(other.available_size)),
-		current_size(move(other.current_size)), sign(move(other.sign))
+	BigInt(BigInt &&other) : available_size(other.available_size),
+		current_size(other.current_size), sign(other.sign)
 	{
 		storage = nullptr;
-		swap(storage, other.storage);
+		std::swap(storage, other.storage);
 	}
 	BigInt& operator= (BigInt &&other) {
 		if (this == &other) {
 			return *this;
 		}
-		this->sign = move(other.sign);
-		this->current_size = move(other.current_size);
-		this->available_size = move(other.available_size);
-		swap(storage, other.storage);
+		this->sign = other.sign;
+		this->current_size = other.current_size;
+		this->available_size = other.available_size;
+		std::swap(storage, other.storage);
 		return *this;
 	}
 	BigInt& operator= (const BigInt &other) {
@@ -92,9 +90,13 @@ public:
 	BigInt operator+ (const BigInt &other) const {
 		if (sign == other.sign) {
 			BigInt res(other);
-			for (ssize_t i = 0, carry = 0; i < max(current_size, other.current_size) || carry; ++i) {
+			for (size_t i = 0, carry = 0; i < std::max(current_size, other.current_size) || carry; ++i) {
 				if (i == res.current_size) {
-					res.resize(res.current_size + 1);
+					if (!res.current_size || res.current_size == res.available_size) {
+ 						res.available_size <<= 1;
+						res.resize(res.available_size);
+					}
+					++res.current_size; 
 				} 
 				char term = (i < current_size) ? storage[i] : 0;
 				res.storage[i] += (term + carry);
@@ -111,7 +113,7 @@ public:
 		if (sign == other.sign) {
 			if ((*this).abs() >= other.abs()) {
 				BigInt res = *this;
-				for (ssize_t i = 0,  carry = 0; i < other.current_size || carry; ++i) {
+				for (size_t i = 0,  carry = 0; i < other.current_size || carry; ++i) {
 					char sub = (i < other.current_size) ? other.storage[i] : 0;
 					res.storage[i] -= (sub + carry);
 					carry = res.storage[i] < 0;
@@ -139,7 +141,7 @@ public:
 		if (current_size != other.current_size) {
 		    return current_size * (!sign ? 1 : -1) > other.current_size * (!other.sign ? 1: -1);
 		}
-		for (ssize_t i = current_size - 1; i >= 0; --i) {
+		for (int i = current_size - 1; i >= 0; --i) {
 			if (storage[i] != other.storage[i]) {
 		    	return storage[i] * (!sign ? 1: -1) > other.storage[i] * (!sign ? 1 : -1);
 		    }
@@ -165,14 +167,14 @@ public:
     bool operator>= (const BigInt &other) const {
 		return !(*this < other);
     }
-    friend ostream& operator<< (ostream& os, const BigInt &num) {
+    friend std::ostream& operator<< (std::ostream& os, const BigInt &num) {
 		if (num.get_sign()) {
 			os << '-';
 		}
 		if (num.current_size == 0) {
 			os << '0';
 		}
-		for (ssize_t i = num.current_size - 1; i >= 0; --i) {
+		for (int i = num.current_size - 1; i >= 0; --i) {
 			os << (int)num.storage[i];
 		}
 		return os;
