@@ -11,7 +11,7 @@ class Serializer
     static constexpr char Separator = ' ';
 public:
 
-    explicit Serializer(std::ostream& out) : out_(out) {}
+    explicit Serializer(std::ostream& output) : output_(output) {}
 
     template <class T>
     Error save(T& object) {
@@ -24,24 +24,24 @@ public:
     }
     
 private:
-    std::ostream& out_;
+    std::ostream& output_;
     Error process() {
 		return Error::NoError;
 	}
 	
-	Error process(uint64_t val) {
-		out_ << val << Separator;
+	Error process(uint64_t item) {
+		output_ << item << Separator;
 		return Error::NoError;
 	}
 
-	Error process(bool val) {
-		out_ << (val ? "true" : "false") << Separator;
+	Error process(bool item) {
+		output_ << (item ? "true" : "false") << Separator;
 		return Error::NoError;
 	}
 
 	template <class T, class... Args>
-	Error process(T&& val, Args&&... args) {
-		if (process(val) == Error::NoError) {
+	Error process(T&& item, Args&&... args) {
+		if (process(item) == Error::NoError) {
 			return process(std::forward<Args>(args)...);
 		} else {
 			return Error::CorruptedArchive;
@@ -52,7 +52,7 @@ private:
 class Deserializer
 {
 public:
-	explicit Deserializer(std::istream& in) : in_(in) {}
+	explicit Deserializer(std::istream& input) : input_(input) {}
 
 	template <class T>
 	Error load(T& object) {
@@ -63,12 +63,11 @@ public:
 	Error operator() (ArgsT&&... args) {
 		return process(args...);
 	}
-	
 private:
-	std::istream& in_;
+	std::istream& input_;
 	Error process(bool& item) {
 		std::string text;
-		in_ >> text;
+		input_ >> text;
 
 		if (text == "true") {
 			item = true;
@@ -87,7 +86,7 @@ private:
 	
 	Error process(uint64_t& item) {
 		std::string text;
-		in_ >> text;
+		input_ >> text;
 		if (text.empty() || text[0] == '-') {
 			return Error::CorruptedArchive;
 		}
@@ -96,8 +95,8 @@ private:
 	}
 
 	template <class T, class... Args>
-	Error process(T&& val, Args&&... args) {
-		if (process(val) == Error::NoError) {
+	Error process(T&& item, Args&&... args) {
+		if (process(item) == Error::NoError) {
 			return process(std::forward<Args>(args)...);
 		} else {
 			return Error::CorruptedArchive;
