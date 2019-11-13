@@ -12,6 +12,7 @@ class Serializer
 public:
 
     explicit Serializer(std::ostream& output) : output_(output) {}
+    
 
     template <class T>
     Error save(T& object) {
@@ -19,8 +20,8 @@ public:
     }
 
     template <class... ArgsT>
-    Error operator() (ArgsT... args) {
-        return process(args...);
+    Error operator() (ArgsT&&... args) {
+        return process(std::forward<ArgsT>(args)...);
     }
     
 private:
@@ -61,7 +62,7 @@ public:
 
 	template <class... ArgsT>
 	Error operator() (ArgsT&&... args) {
-		return process(args...);
+		return process(std::forward<ArgsT>(args)...);
 	}
 private:
 	std::istream& input_;
@@ -93,7 +94,6 @@ private:
 		item = std::stoull(text);
 		return Error::NoError;
 	}
-
 	template <class T, class... Args>
 	Error process(T&& item, Args&&... args) {
 		if (process(item) == Error::NoError) {
