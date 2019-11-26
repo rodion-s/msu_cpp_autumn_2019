@@ -103,8 +103,8 @@ public:
     bool operator>=(const Iterator& other) const {
         return ptr_ >= other.ptr_;
     }
-   	reference_type operator[](size_type n) {
-        return ptr_[n];
+   	reference_type operator[](size_type idx) {
+        return ptr_[idx];
     }
 };
 
