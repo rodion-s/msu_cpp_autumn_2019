@@ -127,10 +127,10 @@ private:
     Alloc alloc_;
 public:
     Vector(size_type init_sz = 0) : 
-    					data_(alloc_.allocate(init_sz)), 
-                    	size_(init_sz), 
-                    	available_sz_(1), 
-                    	alloc_() 
+        data_(alloc_.allocate(init_sz)), 
+        size_(init_sz), 
+        available_sz_(1), 
+        alloc_() 
     {
         for (size_type i = 0; i < size_; ++i)
             alloc_.construct(data_ + i);
@@ -155,7 +155,7 @@ public:
         if (available_sz_ < new_sz) {
             pointer_type buf = alloc_.allocate(new_sz);
             for (size_type i = 0; i < size_; ++i) {
-                alloc_.construct(buf + i, std::forward<T>(*(data_ + i)));
+                alloc_.construct(buf + i, *(data_ + i));
                 alloc_.destroy(data_ + i);
             }
             alloc_.deallocate(data_, available_sz_);
@@ -163,6 +163,7 @@ public:
             data_ = buf;
         }
     }
+    
     reference_type operator[](size_type idx) {
         if (idx < size_) {
             return data_[idx];
