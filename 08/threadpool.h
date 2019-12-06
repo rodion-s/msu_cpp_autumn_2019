@@ -8,11 +8,11 @@
 
 class ThreadPool {
 private:
-    std::atomic<bool> destruct;
     std::vector<std::thread> threads;
     std::queue<std::function<void()>> queue;
     std::mutex queue_mutex;
     std::condition_variable condition;
+    bool destruct;
 public:
     explicit ThreadPool(size_t poolSize) : destruct(false) {
         for (size_t i = 0; i < poolSize; ++i) { // Создаем ppolSize потоков, каждый поток либо выполняет задачу, либо спит
