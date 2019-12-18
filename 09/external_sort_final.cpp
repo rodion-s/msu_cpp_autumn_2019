@@ -14,6 +14,10 @@ void work()
 {
     uint64_t *buf = new uint64_t[BLOCK_SIZE];
     ifstream input("in.bin", ios::binary);
+    if (!input) {
+    	delete[] buf;
+    	throw std::ifstream::failure("Failed to open in.bin");
+    }
     size_t tmp_file_count = 0;
 
     vector<string> tmp_file_names;
@@ -36,6 +40,7 @@ void work()
 
             std::ofstream f1(tmp_file_names[tmp_file_count - 2], std::ios::binary);
             if (!f1) {
+            	delete[] buf;
                 throw std::ofstream::failure(tmp_file_names[tmp_file_count - 2]);
             }
             f1.write(reinterpret_cast<const char*>(buf), sizeof(uint64_t) * readed_size / 2);
@@ -43,6 +48,7 @@ void work()
             std::ofstream f2(tmp_file_names[tmp_file_count - 1], std::ios::binary);
             f2.write(reinterpret_cast<const char*>(buf + readed_size / 2), sizeof(uint64_t) * readed_size / 2);
             if (!f2) {
+            	delete[] buf;
                 throw std::ofstream::failure(tmp_file_names[tmp_file_count - 1]);
             }
             f1.close();
